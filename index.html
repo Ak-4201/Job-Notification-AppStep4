@@ -85,6 +85,74 @@
                   This section will be built in the next step.
                 </p>
               </div>
+              <div class="route-placeholder__actions route-placeholder__actions--hidden">
+                <button
+                  type="button"
+                  class="btn btn--primary js-start-tracking"
+                >
+                  Start Tracking
+                </button>
+              </div>
+              <section
+                class="settings-placeholder settings-placeholder--hidden"
+                aria-label="Notification preferences (placeholder)"
+              >
+                <div class="form-row">
+                  <div class="field">
+                    <label class="field__label" for="settings-role-keywords">
+                      Role keywords
+                    </label>
+                    <input
+                      id="settings-role-keywords"
+                      class="field__control"
+                      type="text"
+                      placeholder="e.g. Frontend Engineer, Product Designer"
+                      disabled
+                    />
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="settings-preferred-locations">
+                      Preferred locations
+                    </label>
+                    <input
+                      id="settings-preferred-locations"
+                      class="field__control"
+                      type="text"
+                      placeholder="e.g. Bengaluru, Remote within India"
+                      disabled
+                    />
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="settings-mode">
+                      Mode
+                    </label>
+                    <select
+                      id="settings-mode"
+                      class="field__control"
+                      disabled
+                    >
+                      <option>Remote</option>
+                      <option>Hybrid</option>
+                      <option>Onsite</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="settings-experience">
+                      Experience level
+                    </label>
+                    <select
+                      id="settings-experience"
+                      class="field__control"
+                      disabled
+                    >
+                      <option>Junior</option>
+                      <option>Mid-level</option>
+                      <option>Senior</option>
+                      <option>Lead</option>
+                    </select>
+                  </div>
+                </div>
+              </section>
             </div>
           </div>
         </section>
@@ -98,10 +166,39 @@
                 A calm space for supporting context, filters, or summaries.
               </p>
             </header>
-            <div class="card__body">
-              <p class="secondary-panel__placeholder">
-                The layout is ready. Detailed behavior for this panel will be defined alongside real product flows.
-              </p>
+            <div class="card__body card__body--stacked">
+              <section aria-label="Step explanation">
+                <ol class="step-list">
+                  <li class="step-list__item">
+                    Start with a calm layout skeleton.
+                  </li>
+                  <li class="step-list__item">
+                    Introduce tokens for color, type, and spacing.
+                  </li>
+                  <li class="step-list__item">
+                    Layer in reusable components before product logic.
+                  </li>
+                </ol>
+              </section>
+              <section aria-label="Copyable prompt" class="prompt-block">
+                <div class="prompt-block__header">
+                  <span class="prompt-block__title">Design prompt</span>
+                  <button
+                    type="button"
+                    class="btn btn--secondary btn--sm js-prompt-copy"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <textarea
+                  class="prompt-block__body"
+                  readonly
+                >Use the existing layout shell: Top Bar → Context Header → Primary Workspace + Secondary Panel → Proof Footer. Keep colors limited, spacing on the 8px scale, and interactions subtle.</textarea>
+              </section>
+              <div class="secondary-actions">
+                <button type="button" class="btn btn--primary">Use this layout</button>
+                <button type="button" class="btn btn--ghost">Reset example</button>
+              </div>
             </div>
           </div>
         </aside>

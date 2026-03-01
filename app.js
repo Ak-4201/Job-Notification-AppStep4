@@ -2,51 +2,58 @@
   var routes = {
     "/": {
       key: "/dashboard",
-      headerTitle: "Dashboard",
+      headerTitle: "Stop Missing The Right Jobs.",
       headerSubtitle:
-        "A calm overview of your job notifications will appear here.",
-      pageTitle: "Dashboard",
-      pageSubtitle: "This section will be built in the next step.",
+        "Precision-matched job discovery delivered daily at 9AM.",
+      pageTitle: "Stop Missing The Right Jobs.",
+      pageSubtitle:
+        "Precision-matched job discovery delivered daily at 9AM.",
+      showStartTrackingCta: true,
     },
     "/dashboard": {
       key: "/dashboard",
       headerTitle: "Dashboard",
       headerSubtitle:
-        "A calm overview of your job notifications will appear here.",
+        "No jobs yet. In the next step, you will load a realistic dataset.",
       pageTitle: "Dashboard",
-      pageSubtitle: "This section will be built in the next step.",
+      pageSubtitle:
+        "No jobs yet. In the next step, you will load a realistic dataset.",
     },
     "/saved": {
       key: "/saved",
       headerTitle: "Saved",
       headerSubtitle:
-        "A focused space for saved roles and notifications will appear here.",
+        "No saved jobs yet. In the next step, you will be able to keep roles you want to revisit.",
       pageTitle: "Saved",
-      pageSubtitle: "This section will be built in the next step.",
+      pageSubtitle:
+        "No saved jobs yet. In the next step, you will be able to keep roles you want to revisit.",
     },
     "/digest": {
       key: "/digest",
       headerTitle: "Digest",
       headerSubtitle:
-        "A structured digest of job notifications will be defined here.",
+        "A daily 9AM summary of relevant roles will appear here in a later step.",
       pageTitle: "Digest",
-      pageSubtitle: "This section will be built in the next step.",
+      pageSubtitle:
+        "A daily 9AM summary of relevant roles will appear here in a later step.",
     },
     "/settings": {
       key: "/settings",
       headerTitle: "Settings",
       headerSubtitle:
-        "Notification preferences and delivery settings will live here.",
+        "Define how job notifications should behave. Saving will be added in a later step.",
       pageTitle: "Settings",
-      pageSubtitle: "This section will be built in the next step.",
+      pageSubtitle:
+        "Set up role keywords, locations, and preferences. This is a placeholder – no data is stored yet.",
     },
     "/proof": {
       key: "/proof",
       headerTitle: "Proof",
       headerSubtitle:
-        "A clear view of what has shipped will be defined in this section.",
+        "A placeholder space for artifacts that demonstrate how your notification system behaves.",
       pageTitle: "Proof",
-      pageSubtitle: "This section will be built in the next step.",
+      pageSubtitle:
+        "In the next step, this page will collect links, screenshots, and other proof of behavior.",
     },
     notFound: {
       key: null,
@@ -63,12 +70,17 @@
   var placeholderSubtitle = document.querySelector(
     ".route-placeholder__subtitle"
   );
+  var ctaContainer = document.querySelector(".route-placeholder__actions");
+  var settingsSection = document.querySelector(".settings-placeholder");
   var nav = document.querySelector(".app-nav");
   var navToggle = document.querySelector(".app-nav__toggle");
   var navLinks = Array.prototype.slice.call(
     document.querySelectorAll(".app-nav__link")
   );
   var brandLink = document.querySelector(".app-name");
+  var promptCopyButton = document.querySelector(".js-prompt-copy");
+  var promptBody = document.querySelector(".prompt-block__body");
+  var startTrackingButton = document.querySelector(".js-start-tracking");
 
   function resolveRoute(pathname) {
     if (!pathname || pathname === "/") {
@@ -108,6 +120,22 @@
     if (placeholderSubtitle && route.pageSubtitle) {
       placeholderSubtitle.textContent = route.pageSubtitle;
     }
+
+    if (ctaContainer) {
+      if (route.showStartTrackingCta) {
+        ctaContainer.classList.remove("route-placeholder__actions--hidden");
+      } else {
+        ctaContainer.classList.add("route-placeholder__actions--hidden");
+      }
+    }
+
+    if (settingsSection) {
+      if (route.key === "/settings") {
+        settingsSection.classList.remove("settings-placeholder--hidden");
+      } else {
+        settingsSection.classList.add("settings-placeholder--hidden");
+      }
+    }
     setActiveLink(route);
   }
 
@@ -144,6 +172,44 @@
     brandLink.addEventListener("click", function (event) {
       event.preventDefault();
       navigate("/");
+    });
+  }
+
+  if (startTrackingButton) {
+    startTrackingButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      navigate("/settings");
+    });
+  }
+
+  if (promptCopyButton && promptBody) {
+    promptCopyButton.addEventListener("click", function () {
+      var content =
+        promptBody.value || promptBody.textContent || "";
+      if (!content) {
+        return;
+      }
+
+      if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard
+          .writeText(content)
+          .then(function () {
+            var originalLabel = promptCopyButton.textContent;
+            promptCopyButton.textContent = "Copied";
+            window.setTimeout(function () {
+              promptCopyButton.textContent = originalLabel;
+            }, 2000);
+          })
+          .catch(function () {
+            window.alert(
+              "We couldn’t copy this automatically. Please select the text and copy it manually."
+            );
+          });
+      } else {
+        window.alert(
+          "We couldn’t copy this automatically. Please select the text and copy it manually."
+        );
+      }
     });
   }
 

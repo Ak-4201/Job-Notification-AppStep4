@@ -185,7 +185,7 @@ body.app-body {
 }
 
 .status-badge {
-  padding: 4px var(--space-2);
+  padding: var(--space-1) var(--space-2);
   border-radius: 999px;
   border: 1px solid var(--border-color-subtle);
   font-size: 13px;
@@ -261,6 +261,22 @@ body.app-body {
   margin: 0;
   font-size: 15px;
   color: rgba(17, 17, 17, 0.8);
+}
+
+.route-placeholder__actions {
+  margin-top: var(--space-3);
+}
+
+.route-placeholder__actions--hidden {
+  display: none;
+}
+
+.settings-placeholder {
+  margin-top: var(--space-3);
+}
+
+.settings-placeholder--hidden {
+  display: none;
 }
 
 /* Cards */
@@ -371,7 +387,7 @@ body.app-body {
 }
 
 .field__control {
-  padding: 10px var(--space-2);
+  padding: var(--space-2);
   border-radius: var(--border-radius);
   border: 1px solid var(--border-color-subtle);
   background-color: #fdfcf9;
@@ -410,7 +426,7 @@ body.app-body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px var(--space-3);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--border-radius);
   border: 1px solid transparent;
   font-size: 14px;
@@ -465,7 +481,7 @@ body.app-body {
 }
 
 .btn--sm {
-  padding: 6px var(--space-2);
+  padding: var(--space-1) var(--space-2);
   font-size: 13px;
 }
 
