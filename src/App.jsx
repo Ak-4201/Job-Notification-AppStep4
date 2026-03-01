@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
+import { ToastProvider } from './context/ToastContext';
 import TopBar from './components/TopBar';
 import Nav from './components/Nav';
 import ContextHeader from './components/ContextHeader';
@@ -86,9 +87,11 @@ function AppLayout() {
 export default function App() {
   return (
     <AppProvider>
-      <Routes>
-        <Route path="*" element={<AppLayout />} />
-      </Routes>
+      <ToastProvider>
+        <Routes>
+          <Route path="*" element={<AppLayout />} />
+        </Routes>
+      </ToastProvider>
     </AppProvider>
   );
 }

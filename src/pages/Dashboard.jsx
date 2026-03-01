@@ -12,17 +12,18 @@ const initialFilters = {
   mode: '',
   experience: '',
   source: '',
+  status: '',
   sort: 'latest',
 };
 
 export default function Dashboard() {
-  const { savedIds, saveJob } = useApp();
+  const { savedIds, saveJob, getJobStatus, setJobStatus } = useApp();
   const [filters, setFilters] = useState(initialFilters);
   const [modalJob, setModalJob] = useState(null);
 
   const list = useMemo(
-    () => filterAndSortJobs(JOBS, filters),
-    [filters]
+    () => filterAndSortJobs(JOBS, filters, getJobStatus),
+    [filters, getJobStatus]
   );
   const savedSet = useMemo(() => {
     const s = {};
@@ -48,9 +49,11 @@ export default function Dashboard() {
                 key={job.id}
                 job={job}
                 saved={!!savedSet[job.id]}
+                status={getJobStatus(job.id)}
                 onView={setModalJob}
                 onSave={saveJob}
                 onApply={() => window.open(job.applyUrl, '_blank')}
+                onStatusChange={setJobStatus}
               />
             ))
           )}

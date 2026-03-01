@@ -16,7 +16,7 @@ const initialFilters = {
 };
 
 export default function Saved() {
-  const { savedIds, saveJob } = useApp();
+  const { savedIds, saveJob, getJobStatus, setJobStatus } = useApp();
   const [filters, setFilters] = useState(initialFilters);
   const [modalJob, setModalJob] = useState(null);
 
@@ -25,7 +25,7 @@ export default function Saved() {
     [savedIds]
   );
   const list = useMemo(
-    () => filterAndSortJobs(savedJobs, filters),
+    () => filterAndSortJobs(savedJobs, filters, null),
     [savedJobs, filters]
   );
   const savedSet = useMemo(() => {
@@ -52,9 +52,11 @@ export default function Saved() {
                 key={job.id}
                 job={job}
                 saved={!!savedSet[job.id]}
+                status={getJobStatus(job.id)}
                 onView={setModalJob}
                 onSave={saveJob}
                 onApply={() => window.open(job.applyUrl, '_blank')}
+                onStatusChange={setJobStatus}
               />
             ))
           )}

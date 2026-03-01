@@ -42,9 +42,11 @@ export default function Digest() {
     loadDigest,
     saveDigest,
     getTodayKey,
+    loadStatusUpdates,
   } = useApp();
   const [digest, setDigest] = useState(() => loadDigest());
   const [copyLabel, setCopyLabel] = useState('Copy Digest to Clipboard');
+  const statusUpdates = loadStatusUpdates();
 
   const hasPrefs = !!preferences;
 
@@ -111,6 +113,26 @@ export default function Digest() {
       {hasPrefs && digest && digest.length === 0 && (
         <div id="digest-no-matches" className="digest-blocking">
           <p className="digest-blocking__text">No matching jobs for today.</p>
+        </div>
+      )}
+
+      {statusUpdates.length > 0 && (
+        <div className="digest-status-updates digest-card">
+          <h2 className="digest-card__title">Recent Status Updates</h2>
+          <div className="digest-status-updates__list">
+            {statusUpdates.map((u, i) => (
+              <div key={`${u.jobId}-${u.dateChanged}-${i}`} className="digest-status-update">
+                <span className="digest-status-update__title">{u.title}</span>
+                <span className="digest-status-update__company">{u.company}</span>
+                <span className={`digest-status-update__badge digest-status-update__badge--${u.status.toLowerCase().replace(' ', '-')}`}>
+                  {u.status}
+                </span>
+                <span className="digest-status-update__date">
+                  {u.dateChanged ? new Date(u.dateChanged).toLocaleDateString() : ''}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

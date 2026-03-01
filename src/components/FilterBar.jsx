@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { JOBS } from '../data/jobs';
 
-export default function FilterBar({ filters, onChange }) {
+export default function FilterBar({ filters, onChange, showStatusFilter = false }) {
   const locations = useMemo(() => {
     const locs = {};
     JOBS.forEach((j) => {
@@ -68,6 +68,20 @@ export default function FilterBar({ filters, onChange }) {
         <option value="Naukri">Naukri</option>
         <option value="Indeed">Indeed</option>
       </select>
+      {showStatusFilter && (
+        <select
+          id="filter-status"
+          className="field__control filter-bar__select"
+          value={filters.status || ''}
+          onChange={(e) => onChange({ ...filters, status: e.target.value || '' })}
+        >
+          <option value="">All</option>
+          <option value="Not Applied">Not Applied</option>
+          <option value="Applied">Applied</option>
+          <option value="Rejected">Rejected</option>
+          <option value="Selected">Selected</option>
+        </select>
+      )}
       <select
         id="filter-sort"
         className="field__control filter-bar__select"

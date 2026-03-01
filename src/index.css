@@ -385,6 +385,73 @@ body.app-body {
   background-color: rgba(34, 119, 194, 0.06);
 }
 
+.job-card__status-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.job-card__status-label {
+  font-size: 13px;
+  color: rgba(17, 17, 17, 0.7);
+}
+
+.job-card__status-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.job-card__status-btn {
+  font-size: 12px;
+  padding: 4px var(--space-1);
+}
+
+.job-card__status-btn--not-applied {
+  border-color: var(--border-color-subtle);
+  background-color: rgba(17, 17, 17, 0.04);
+}
+
+.job-card__status-btn--not-applied.job-card__status-btn--active {
+  border-color: rgba(17, 17, 17, 0.35);
+  background-color: rgba(17, 17, 17, 0.06);
+}
+
+.job-card__status-btn--applied {
+  border-color: rgba(34, 119, 194, 0.5);
+  background-color: rgba(34, 119, 194, 0.06);
+}
+
+.job-card__status-btn--applied.job-card__status-btn--active {
+  border-color: rgba(34, 119, 194, 0.7);
+  background-color: rgba(34, 119, 194, 0.12);
+  color: #1a5a8a;
+}
+
+.job-card__status-btn--rejected {
+  border-color: rgba(139, 0, 0, 0.4);
+  background-color: rgba(139, 0, 0, 0.06);
+}
+
+.job-card__status-btn--rejected.job-card__status-btn--active {
+  border-color: rgba(139, 0, 0, 0.6);
+  background-color: rgba(139, 0, 0, 0.12);
+  color: #8b0000;
+}
+
+.job-card__status-btn--selected {
+  border-color: rgba(47, 111, 78, 0.5);
+  background-color: rgba(47, 111, 78, 0.06);
+}
+
+.job-card__status-btn--selected.job-card__status-btn--active {
+  border-color: rgba(47, 111, 78, 0.7);
+  background-color: rgba(47, 111, 78, 0.12);
+  color: var(--color-success);
+}
+
 .job-card__actions {
   display: flex;
   flex-wrap: wrap;
@@ -977,6 +1044,108 @@ body.app-body {
 .check-item input[type="checkbox"] {
   width: 16px;
   height: 16px;
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  bottom: var(--space-3);
+  right: var(--space-3);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  pointer-events: none;
+}
+
+.toast {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color-subtle);
+  background-color: #fdfcf9;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(17, 17, 17, 0.08);
+  animation: toast-in 200ms ease-out;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Digest status updates */
+.digest-status-updates {
+  margin-bottom: var(--space-3);
+}
+
+.digest-status-updates__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.digest-status-update {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border-color-subtle);
+  font-size: 14px;
+}
+
+.digest-status-update:last-child {
+  border-bottom: none;
+}
+
+.digest-status-update__title {
+  font-weight: 500;
+}
+
+.digest-status-update__company {
+  color: rgba(17, 17, 17, 0.75);
+}
+
+.digest-status-update__badge {
+  padding: 2px var(--space-1);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.digest-status-update__badge--not-applied {
+  background-color: rgba(17, 17, 17, 0.06);
+  border: 1px solid var(--border-color-subtle);
+}
+
+.digest-status-update__badge--applied {
+  background-color: rgba(34, 119, 194, 0.1);
+  border: 1px solid rgba(34, 119, 194, 0.3);
+  color: #1a5a8a;
+}
+
+.digest-status-update__badge--rejected {
+  background-color: rgba(139, 0, 0, 0.08);
+  border: 1px solid rgba(139, 0, 0, 0.3);
+  color: #8b0000;
+}
+
+.digest-status-update__badge--selected {
+  background-color: rgba(47, 111, 78, 0.1);
+  border: 1px solid rgba(47, 111, 78, 0.4);
+  color: var(--color-success);
+}
+
+.digest-status-update__date {
+  font-size: 12px;
+  color: rgba(17, 17, 17, 0.6);
 }
 
 /* Responsive */

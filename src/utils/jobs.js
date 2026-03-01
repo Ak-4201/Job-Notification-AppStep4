@@ -1,6 +1,6 @@
 import { JOBS } from '../data/jobs';
 
-export function filterAndSortJobs(list, filters) {
+export function filterAndSortJobs(list, filters, getJobStatus) {
   let result = list.slice();
   const kw = (filters.keyword || '').trim().toLowerCase();
   if (kw) {
@@ -22,6 +22,9 @@ export function filterAndSortJobs(list, filters) {
   }
   if (filters.source) {
     result = result.filter((j) => (j.source || '') === filters.source);
+  }
+  if (filters.status && getJobStatus) {
+    result = result.filter((j) => (getJobStatus(j.id) || 'Not Applied') === filters.status);
   }
   result.sort((a, b) => {
     const da = a.postedDaysAgo != null ? a.postedDaysAgo : 0;
