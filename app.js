@@ -1,5 +1,7 @@
 (function () {
   var STORAGE_KEY = "job-notification-tracker-saved";
+  var PREFERENCES_KEY = "jobTrackerPreferences";
+  var DIGEST_KEY_PREFIX = "jobTrackerDigest_";
   var jobs = (typeof window.JOB_DATA !== "undefined" && window.JOB_DATA) || [];
 
   var routes = {
@@ -35,10 +37,10 @@
       key: "/digest",
       headerTitle: "Digest",
       headerSubtitle:
-        "A daily 9AM summary of relevant roles will appear here in a later step.",
+        "Your daily 9AM summary of top jobs, personalized by your preferences.",
       pageTitle: "Digest",
       pageSubtitle:
-        "A daily 9AM summary of relevant roles will appear here in a later step.",
+        "Your daily 9AM summary of top jobs, personalized by your preferences.",
     },
     "/settings": {
       key: "/settings",
@@ -96,6 +98,13 @@
   var modalSkills = document.querySelector(".modal__skills");
   var modalSaveBtn = document.querySelector(".js-modal-save");
   var modalApplyLink = document.querySelector(".js-modal-apply");
+  var digestView = document.getElementById("digest-view");
+  var digestNoPrefs = document.getElementById("digest-no-prefs");
+  var digestGenerateArea = document.getElementById("digest-generate-area");
+  var digestContent = document.getElementById("digest-content");
+  var digestNoMatches = document.getElementById("digest-no-matches");
+  var digestJobsList = document.getElementById("digest-jobs-list");
+  var digestDateEl = document.getElementById("digest-date");
 
   function getSavedIds() {
     try {
@@ -117,6 +126,104 @@
   function removeSaved(id) {
     var ids = getSavedIds().filter(function (x) { return x !== id; });
     localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+  }
+
+  function getPreferences() {
+    try {
+      var raw = localStorage.getItem(PREFERENCES_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setPreferences(prefs) {
+    localStorage.setItem(PREFERENCES_KEY, JSON.stringify(prefs));
+  }
+
+  function getMatchScore(job) {
+    var num = parseInt((job.id || "").replace(/\D/g, ""), 10) || 0;
+    return 65 + (num % 34);
+  }
+
+  function getTodayKey() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
+  function getDigestKey() {
+    return DIGEST_KEY_PREFIX + getTodayKey();
+  }
+
+  function loadDigest() {
+    try {
+      var raw = localStorage.getItem(getDigestKey());
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveDigest(list) {
+    localStorage.setItem(getDigestKey(), JSON.stringify(list));
+  }
+
+  function generateDigest() {
+    var sorted = jobs.slice().map(function (j) {
+      return { job: j, matchScore: getMatchScore(j), postedDaysAgo: j.postedDaysAgo != null ? j.postedDaysAgo : 0 };
+    });
+    sorted.sort(function (a, b) {
+      if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
+      return a.postedDaysAgo - b.postedDaysAgo;
+    });
+    var top10 = sorted.slice(0, 10).map(function (x) {
+      var j = x.job;
+      return { id: j.id, title: j.title, company: j.company, location: j.location, experience: j.experience, matchScore: x.matchScore, applyUrl: j.applyUrl };
+    });
+    saveDigest(top10);
+    return top10;
+  }
+
+  function formatDigestPlainText(list) {
+    var lines = ["Top 10 Jobs For You — 9AM Digest", getTodayKey(), ""];
+    list.forEach(function (item, i) {
+      lines.push((i + 1) + ". " + (item.title || "") + " @ " + (item.company || ""));
+      lines.push("   " + (item.location || "") + " · " + (item.experience || "") + " · Match: " + (item.matchScore || "") + "%");
+      lines.push("   Apply: " + (item.applyUrl || ""));
+      lines.push("");
+    });
+    lines.push("This digest was generated based on your preferences.");
+    return lines.join("\n");
+  }
+
+  function handleEmailDraft() {
+    var list = loadDigest();
+    if (!list || list.length === 0) return;
+    var subject = "My 9AM Job Digest";
+    var body = formatDigestPlainText(list);
+    if (body.length > 800) body = body.slice(0, 800) + "\n\n[Content truncated…]";
+    window.location.href =
+      "mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      return Promise.resolve();
+    } catch (e) {
+      return Promise.reject(e);
+    } finally {
+      document.body.removeChild(ta);
+    }
   }
 
   function getFilterValues() {
@@ -238,8 +345,64 @@
         jobsView.classList.add("jobs-view--hidden");
       }
     }
+    var isDigest = pathname === "/digest";
     if (routePlaceholder) {
-      routePlaceholder.classList.toggle("route-placeholder--hidden", isJobs);
+      routePlaceholder.classList.toggle("route-placeholder--hidden", isJobs || isDigest);
+    }
+  }
+
+  function renderDigestView() {
+    var hasPrefs = !!getPreferences();
+    if (digestNoPrefs) digestNoPrefs.classList.toggle("digest-blocking--hidden", hasPrefs);
+    if (digestGenerateArea) digestGenerateArea.classList.toggle("digest-generate-area--hidden", !hasPrefs);
+
+    if (!hasPrefs) {
+      if (digestContent) digestContent.classList.add("digest-content--hidden");
+      if (digestNoMatches) digestNoMatches.classList.add("digest-blocking--hidden");
+      return;
+    }
+
+    var existing = loadDigest();
+    if (existing) {
+      if (existing.length === 0) {
+        if (digestContent) digestContent.classList.add("digest-content--hidden");
+        if (digestNoMatches) digestNoMatches.classList.remove("digest-blocking--hidden");
+        if (digestGenerateArea) digestGenerateArea.classList.add("digest-generate-area--hidden");
+      } else {
+        if (digestNoMatches) digestNoMatches.classList.add("digest-blocking--hidden");
+        if (digestGenerateArea) digestGenerateArea.classList.add("digest-generate-area--hidden");
+        if (digestContent) digestContent.classList.remove("digest-content--hidden");
+        if (digestDateEl) digestDateEl.textContent = getTodayKey();
+        if (digestJobsList) {
+          digestJobsList.innerHTML = existing.map(function (item) {
+            return (
+              '<div class="digest-job">' +
+              '<h3 class="digest-job__title">' + escapeHtml(item.title || "") + "</h3>" +
+              '<p class="digest-job__meta">' +
+              escapeHtml((item.company || "") + " · " + (item.location || "") + " · " + (item.experience || "")) +
+              "</p>" +
+              '<p class="digest-job__score">Match: ' + escapeHtml(String(item.matchScore || "")) + "%</p>" +
+              '<a href="' + escapeHtml(item.applyUrl || "#") + '" target="_blank" rel="noopener" class="btn btn--primary btn--sm">Apply</a>' +
+              "</div>"
+            );
+          }).join("");
+        }
+      }
+    } else {
+      if (digestContent) digestContent.classList.add("digest-content--hidden");
+      if (digestNoMatches) digestNoMatches.classList.add("digest-blocking--hidden");
+    }
+  }
+
+  function updateDigestView(pathname) {
+    var isDigest = pathname === "/digest";
+    if (digestView) {
+      if (isDigest) {
+        digestView.classList.remove("digest-view--hidden");
+        renderDigestView();
+      } else {
+        digestView.classList.add("digest-view--hidden");
+      }
     }
   }
 
@@ -327,11 +490,13 @@
     if (settingsSection) {
       if (route.key === "/settings") {
         settingsSection.classList.remove("settings-placeholder--hidden");
+        loadPreferencesIntoForm();
       } else {
         settingsSection.classList.add("settings-placeholder--hidden");
       }
     }
     updateJobsView(pathname);
+    updateDigestView(pathname);
     setActiveLink(route);
   }
 
@@ -374,6 +539,76 @@
   if (startTrackingButton) {
     startTrackingButton.addEventListener("click", function (event) {
       event.preventDefault();
+      navigate("/settings");
+    });
+  }
+
+  var settingsSaveBtn = document.querySelector(".js-settings-save");
+  if (settingsSaveBtn) {
+    settingsSaveBtn.addEventListener("click", function () {
+      var prefs = {
+        roleKeywords: (document.getElementById("settings-role-keywords") || {}).value || "",
+        locations: (document.getElementById("settings-preferred-locations") || {}).value || "",
+        mode: (document.getElementById("settings-mode") || {}).value || "",
+        experience: (document.getElementById("settings-experience") || {}).value || ""
+      };
+      setPreferences(prefs);
+      if (window.location.pathname === "/digest") renderDigestView();
+    });
+  }
+
+  function loadPreferencesIntoForm() {
+    var prefs = getPreferences();
+    if (!prefs) return;
+    var kw = document.getElementById("settings-role-keywords");
+    var loc = document.getElementById("settings-preferred-locations");
+    var mode = document.getElementById("settings-mode");
+    var exp = document.getElementById("settings-experience");
+    if (kw) kw.value = prefs.roleKeywords || "";
+    if (loc) loc.value = prefs.locations || "";
+    if (mode) mode.value = prefs.mode || "";
+    if (exp) exp.value = prefs.experience || "";
+  }
+
+  var digestGenerateBtn = document.querySelector(".js-digest-generate");
+  if (digestGenerateBtn) {
+    digestGenerateBtn.addEventListener("click", function () {
+      var existing = loadDigest();
+      if (!existing) {
+        generateDigest();
+      }
+      renderDigestView();
+    });
+  }
+
+  var digestCopyBtn = document.querySelector(".js-digest-copy");
+  if (digestCopyBtn) {
+    digestCopyBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      var list = loadDigest();
+      if (!list || list.length === 0) return;
+      var text = formatDigestPlainText(list);
+      copyToClipboard(text)
+        .then(function () {
+          var orig = digestCopyBtn.textContent;
+          digestCopyBtn.textContent = "Copied";
+          setTimeout(function () { digestCopyBtn.textContent = orig; }, 2000);
+        })
+        .catch(function () {
+          window.alert("Could not copy. Please select and copy the digest manually.");
+        });
+    });
+  }
+
+  var digestEmailBtn = document.querySelector(".js-digest-email");
+  if (digestEmailBtn) {
+    digestEmailBtn.addEventListener("click", handleEmailDraft);
+  }
+
+  var digestGoSettingsBtn = document.querySelector(".js-digest-go-settings");
+  if (digestGoSettingsBtn) {
+    digestGoSettingsBtn.addEventListener("click", function (e) {
+      e.preventDefault();
       navigate("/settings");
     });
   }

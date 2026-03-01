@@ -1,0 +1,94 @@
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { AppProvider } from './context/AppContext';
+import TopBar from './components/TopBar';
+import Nav from './components/Nav';
+import ContextHeader from './components/ContextHeader';
+import ProofFooter from './components/ProofFooter';
+import Landing from './pages/Landing';
+import Dashboard from './pages/Dashboard';
+import Saved from './pages/Saved';
+import Digest from './pages/Digest';
+import Settings from './pages/Settings';
+import Proof from './pages/Proof';
+import NotFound from './pages/NotFound';
+
+const ROUTES = {
+  '/': {
+    headerTitle: 'Stop Missing The Right Jobs.',
+    headerSubtitle:
+      'Precision-matched job discovery delivered daily at 9AM.',
+    component: Landing,
+  },
+  '/dashboard': {
+    headerTitle: 'Dashboard',
+    headerSubtitle:
+      'Browse and filter jobs. Save roles you want to revisit.',
+    component: Dashboard,
+  },
+  '/saved': {
+    headerTitle: 'Saved',
+    headerSubtitle:
+      "Jobs you've saved for later. They persist across sessions.",
+    component: Saved,
+  },
+  '/digest': {
+    headerTitle: 'Digest',
+    headerSubtitle:
+      'Your daily 9AM summary of top jobs, personalized by your preferences.',
+    component: Digest,
+  },
+  '/settings': {
+    headerTitle: 'Settings',
+    headerSubtitle:
+      'Define how job notifications should behave.',
+    component: Settings,
+  },
+  '/proof': {
+    headerTitle: 'Proof',
+    headerSubtitle:
+      'A placeholder space for artifacts that demonstrate how your notification system behaves.',
+    component: Proof,
+  },
+};
+
+function AppLayout() {
+  const location = useLocation();
+  const pathname = location.pathname;
+  const route = ROUTES[pathname] || {
+    headerTitle: 'Page Not Found',
+    headerSubtitle: 'The page you are looking for does not exist.',
+    component: NotFound,
+  };
+
+  const PageComponent = route.component;
+  const isJobs = pathname === '/dashboard' || pathname === '/saved';
+  const isDigest = pathname === '/digest';
+  const showPlaceholder = !isJobs && !isDigest;
+
+  return (
+    <div className="layout-shell">
+      <TopBar />
+      <Nav />
+      <ContextHeader title={route.headerTitle} subtitle={route.headerSubtitle} />
+      <div className="workspace">
+        <div className="workspace__primary">
+          {showPlaceholder && <PageComponent />}
+          {isJobs && <PageComponent />}
+          {isDigest && <PageComponent />}
+        </div>
+        <div className="workspace__secondary" />
+      </div>
+      <ProofFooter />
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AppProvider>
+      <Routes>
+        <Route path="*" element={<AppLayout />} />
+      </Routes>
+    </AppProvider>
+  );
+}
