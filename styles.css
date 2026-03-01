@@ -279,6 +279,220 @@ body.app-body {
   display: none;
 }
 
+.route-placeholder--hidden {
+  display: none;
+}
+
+/* Jobs view */
+.jobs-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.jobs-view--hidden {
+  display: none;
+}
+
+/* Filter bar */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.filter-bar__keyword {
+  flex: 1 1 200px;
+  min-width: 180px;
+}
+
+.filter-bar__select {
+  flex: 0 1 auto;
+  min-width: 120px;
+}
+
+/* Job cards */
+.job-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.job-card {
+  max-width: 720px;
+  padding: var(--space-3);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color-subtle);
+  background-color: #fdfcf9;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.job-card__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 18px;
+}
+
+.job-card__company {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.job-card__meta {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(17, 17, 17, 0.8);
+}
+
+.job-card__salary {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(17, 17, 17, 0.85);
+}
+
+.job-card__posted {
+  font-size: 13px;
+  color: rgba(17, 17, 17, 0.65);
+}
+
+.source-badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--border-radius);
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border-color-subtle);
+  background-color: rgba(17, 17, 17, 0.04);
+  width: fit-content;
+}
+
+.source-badge--linkedin {
+  border-color: rgba(10, 102, 194, 0.4);
+  background-color: rgba(10, 102, 194, 0.06);
+}
+
+.source-badge--naukri {
+  border-color: rgba(139, 0, 0, 0.4);
+  background-color: rgba(139, 0, 0, 0.06);
+}
+
+.source-badge--indeed {
+  border-color: rgba(34, 119, 194, 0.4);
+  background-color: rgba(34, 119, 194, 0.06);
+}
+
+.job-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.empty-state--hidden {
+  display: none;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+}
+
+.modal--hidden {
+  display: none;
+}
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(17, 17, 17, 0.25);
+}
+
+.modal__panel {
+  position: relative;
+  max-width: 560px;
+  width: 100%;
+  max-height: 85vh;
+  overflow: auto;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color-subtle);
+  background-color: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border-color-subtle);
+}
+
+.modal__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 22px;
+}
+
+.modal__close {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: rgba(17, 17, 17, 0.7);
+  transition: color var(--transition-fast);
+}
+
+.modal__close:hover {
+  color: var(--color-text);
+}
+
+.modal__body {
+  padding: var(--space-3);
+  flex: 1;
+  overflow: auto;
+}
+
+.modal__meta {
+  font-size: 14px;
+  color: rgba(17, 17, 17, 0.8);
+  margin-bottom: var(--space-2);
+}
+
+.modal__description {
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: var(--space-2);
+}
+
+.modal__skills {
+  font-size: 14px;
+  color: rgba(17, 17, 17, 0.75);
+}
+
+.modal__footer {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-top: 1px solid var(--border-color-subtle);
+}
+
 /* Cards */
 
 .card {
@@ -688,6 +902,20 @@ body.app-body {
   .app-nav__link {
     width: 100%;
     padding: var(--space-1) 0;
+  }
+
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-bar__keyword,
+  .filter-bar__select {
+    min-width: 0;
+  }
+
+  .modal__panel {
+    max-height: 90vh;
   }
 }
 

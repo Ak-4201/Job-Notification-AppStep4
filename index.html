@@ -5,6 +5,7 @@
     <title>Job Notification App – Design System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./data.js"></script>
     <script src="./app.js" defer></script>
   </head>
   <body class="app-body">
@@ -79,6 +80,56 @@
               </p>
             </header>
             <div class="card__body">
+              <div id="jobs-view" class="jobs-view jobs-view--hidden">
+                <div class="filter-bar" aria-label="Filter jobs">
+                  <input
+                    id="filter-keyword"
+                    class="field__control filter-bar__keyword"
+                    type="text"
+                    placeholder="Search by title or company"
+                    autocomplete="off"
+                  />
+                  <select id="filter-location" class="field__control filter-bar__select" aria-label="Location">
+                    <option value="">All locations</option>
+                  </select>
+                  <select id="filter-mode" class="field__control filter-bar__select" aria-label="Mode">
+                    <option value="">All modes</option>
+                    <option value="Remote">Remote</option>
+                    <option value="Hybrid">Hybrid</option>
+                    <option value="Onsite">Onsite</option>
+                  </select>
+                  <select id="filter-experience" class="field__control filter-bar__select" aria-label="Experience">
+                    <option value="">All experience</option>
+                    <option value="Fresher">Fresher</option>
+                    <option value="0-1">0-1</option>
+                    <option value="1-3">1-3</option>
+                    <option value="3-5">3-5</option>
+                  </select>
+                  <select id="filter-source" class="field__control filter-bar__select" aria-label="Source">
+                    <option value="">All sources</option>
+                    <option value="LinkedIn">LinkedIn</option>
+                    <option value="Naukri">Naukri</option>
+                    <option value="Indeed">Indeed</option>
+                  </select>
+                  <select id="filter-sort" class="field__control filter-bar__select" aria-label="Sort">
+                    <option value="latest">Latest</option>
+                    <option value="oldest">Oldest</option>
+                  </select>
+                </div>
+                <div id="job-cards-grid" class="job-cards-grid"></div>
+                <div id="jobs-empty-state" class="empty-state empty-state--hidden" role="status">
+                  <div class="empty-state__title">No jobs match your search.</div>
+                  <div class="empty-state__body">
+                    Try adjusting your filters or search term.
+                  </div>
+                </div>
+                <div id="saved-empty-state" class="empty-state empty-state--hidden" role="status">
+                  <div class="empty-state__title">No saved jobs yet</div>
+                  <div class="empty-state__body">
+                    Browse jobs on the Dashboard and use Save to keep roles you want to revisit.
+                  </div>
+                </div>
+              </div>
               <div id="route-placeholder" class="route-placeholder">
                 <h1 class="route-placeholder__title">Dashboard</h1>
                 <p class="route-placeholder__subtitle">
@@ -228,6 +279,26 @@
           </div>
         </div>
       </footer>
+    </div>
+
+    <!-- Job detail modal -->
+    <div id="job-modal" class="modal modal--hidden" role="dialog" aria-modal="true" aria-labelledby="job-modal-title">
+      <div class="modal__backdrop"></div>
+      <div class="modal__panel">
+        <header class="modal__header">
+          <h2 id="job-modal-title" class="modal__title"></h2>
+          <button type="button" class="modal__close" aria-label="Close modal">&times;</button>
+        </header>
+        <div class="modal__body">
+          <div class="modal__meta"></div>
+          <div class="modal__description"></div>
+          <div class="modal__skills"></div>
+        </div>
+        <footer class="modal__footer">
+          <button type="button" class="btn btn--secondary js-modal-save">Save</button>
+          <a href="#" target="_blank" rel="noopener" class="btn btn--primary js-modal-apply">Apply</a>
+        </footer>
+      </div>
     </div>
   </body>
 </html>
