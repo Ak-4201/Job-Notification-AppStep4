@@ -12,6 +12,9 @@ import Digest from './pages/Digest';
 import Settings from './pages/Settings';
 import Proof from './pages/Proof';
 import NotFound from './pages/NotFound';
+import TestChecklist from './pages/TestChecklist';
+import ShipLock from './pages/ShipLock';
+import { TestChecklistProvider } from './context/TestChecklistContext';
 
 const ROUTES = {
   '/': {
@@ -50,6 +53,16 @@ const ROUTES = {
       'A placeholder space for artifacts that demonstrate how your notification system behaves.',
     component: Proof,
   },
+  '/jt/07-test': {
+    headerTitle: 'Test Checklist',
+    headerSubtitle: 'Built-in test verification before shipping.',
+    component: TestChecklist,
+  },
+  '/jt/08-ship': {
+    headerTitle: 'Ship',
+    headerSubtitle: 'Complete all tests before shipping.',
+    component: ShipLock,
+  },
 };
 
 function AppLayout() {
@@ -64,7 +77,8 @@ function AppLayout() {
   const PageComponent = route.component;
   const isJobs = pathname === '/dashboard' || pathname === '/saved';
   const isDigest = pathname === '/digest';
-  const showPlaceholder = !isJobs && !isDigest;
+  const isTestPage = pathname === '/jt/07-test' || pathname === '/jt/08-ship';
+  const showPlaceholder = !isJobs && !isDigest && !isTestPage;
 
   return (
     <div className="layout-shell">
@@ -76,6 +90,7 @@ function AppLayout() {
           {showPlaceholder && <PageComponent />}
           {isJobs && <PageComponent />}
           {isDigest && <PageComponent />}
+          {isTestPage && <PageComponent />}
         </div>
         <div className="workspace__secondary" />
       </div>
@@ -88,9 +103,11 @@ export default function App() {
   return (
     <AppProvider>
       <ToastProvider>
-        <Routes>
-          <Route path="*" element={<AppLayout />} />
-        </Routes>
+        <TestChecklistProvider>
+          <Routes>
+            <Route path="*" element={<AppLayout />} />
+          </Routes>
+        </TestChecklistProvider>
       </ToastProvider>
     </AppProvider>
   );

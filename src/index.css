@@ -1148,6 +1148,121 @@ body.app-body {
   color: rgba(17, 17, 17, 0.6);
 }
 
+/* Test checklist */
+.test-checklist {
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.test-checklist__summary {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color-subtle);
+  background-color: #f9f8f5;
+}
+
+.test-checklist__count {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.test-checklist__warning {
+  margin: var(--space-1) 0 0 0;
+  font-size: 14px;
+  color: var(--color-warning);
+}
+
+.test-checklist__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.test-checklist__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.test-checklist__item {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color-subtle);
+  background-color: #fdfcf9;
+}
+
+.test-checklist__label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.test-checklist__checkbox {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.test-checklist__text {
+  flex: 1;
+}
+
+.test-checklist__tooltip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color-subtle);
+  font-size: 12px;
+  color: rgba(17, 17, 17, 0.6);
+  cursor: help;
+}
+
+.test-checklist__tooltip:hover {
+  color: var(--color-text);
+  border-color: rgba(17, 17, 17, 0.35);
+}
+
+/* Ship lock */
+.ship-lock {
+  max-width: 720px;
+  padding: var(--space-4);
+  border-radius: var(--border-radius);
+  border: 1px dashed var(--border-color-subtle);
+  background-color: #fbfaf7;
+  text-align: center;
+}
+
+.ship-lock__message {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--color-warning);
+}
+
+.ship-lock__message--success {
+  color: var(--color-success);
+}
+
+.ship-lock__hint {
+  margin: var(--space-2) 0 0 0;
+  font-size: 14px;
+  color: rgba(17, 17, 17, 0.75);
+}
+
+.ship-lock__hint a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
 /* Responsive */
 
 @media (max-width: 960px) {
